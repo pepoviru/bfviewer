@@ -25,10 +25,10 @@ gridplot::gridplot(QWidget *parent) :
 
     zoomer = new QwtPlotZoomer( p->xBottom,p->yLeft,p->canvas() );
     zoomer->setZoomBase(true);
-    setZoomEnabled(false);
+    setZoomEnabled(true);
     panner = new QwtPlotPanner( p->canvas() );
     panner->setMouseButton(Qt::RightButton,Qt::NoButton);
-    setPanEnabled(false);
+    setPanEnabled(true);
     magnifier = new QwtPlotMagnifier( p->canvas() );
     magnifier->setMouseButton(Qt::MiddleButton,Qt::NoButton);
 

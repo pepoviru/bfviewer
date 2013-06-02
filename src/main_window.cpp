@@ -51,7 +51,7 @@ void MainWindow::loadFile(const std::string filename)
 	_bf = NULL;
 	_bf = new bigfoot::bufferedfile(filename.c_str(), nrows, ncols, nummappedels, offset);
 	//TODO: move plotting to appropiate method
-	std::size_t numofplottedsamples = 2.5*1000; //Plot first 2.5 seconds
+	std::size_t numofplottedsamples = 15*60*1000; //Plot first 15 minutes
 	std::vector<double> xs(numofplottedsamples);
 	std::vector<double> ys(numofplottedsamples);
 
