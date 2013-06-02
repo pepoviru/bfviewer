@@ -25,18 +25,20 @@
 #include "ui_main_window.h"
 
 #include <bigfoot/bigfoot.hpp>
+#include <bigfoot/config.hpp>
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/fstream.hpp>
+namespace boostfs = boost::filesystem;
 
-//#include <boost/filesystem/operations.hpp>
-//#include <boost/filesystem/fstream.hpp>
-//namespace boostfs = boost::filesystem;
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/weak_ptr.hpp>
+#include <boost/any.hpp>
 
-//#include <boost/shared_ptr.hpp>
-//#include <boost/enable_shared_from_this.hpp>
-//#include <boost/weak_ptr.hpp>
-//#include <boost/any.hpp>
+#include "gridplot.h"
 
 //#include <map>
 
@@ -67,7 +69,7 @@ class MainWindow : public QMainWindow
 	// Attributes:
 	protected:
 		po::variables_map _vm;
-
+	        boost::shared_ptr<gridplot> _gridPlot;
 	// Slots
 	private Q_SLOTS:
         void openFile();

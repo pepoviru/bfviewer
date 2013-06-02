@@ -32,6 +32,8 @@ MainWindow::MainWindow(QMainWindow* parent, const po::variables_map &vm, const p
     connect(_ui.action_About, SIGNAL(triggered()), this, SLOT(about()));
     connect(_ui.action_License, SIGNAL(triggered()), this, SLOT(license()));
 
+    _gridPlot = boost::shared_ptr<gridplot>(new gridplot(this));
+    _ui.gridPlot->addWidget(_gridPlot.get());
 }
 
 void MainWindow::loadFile(const std::string filename, const std::string fileformat)
@@ -61,8 +63,8 @@ void MainWindow::about()
     QMessageBox msgBox;
     msgBox.setWindowTitle(appname);
     //FIXME: Add BIGFOOT_VERSION
-//    QString message = QString("bfviewer %1 \nbigfoot %2 \n\n(c) Jose Vicente 2013. \n\nSee license details in Help->License").arg(BFVIEWER_VERSION).arg(BIGFOOT_VERSION);
-        QString message = QString("bfviewer %1 \n\n(c) Jose Vicente 2013. \n\nSee license details in Help->License").arg(BFVIEWER_VERSION);
+    QString message = QString("bfviewer %1 \nbigfoot %2 \n\n(c) Jose Vicente 2013. \n\nSee license details in Help->License").arg(BFVIEWER_VERSION).arg(BIGFOOT_VERSION);
+//        QString message = QString("bfviewer %1 \n\n(c) Jose Vicente 2013. \n\nSee license details in Help->License").arg(BFVIEWER_VERSION);
     msgBox.setText(message);
     msgBox.exec();
 }
