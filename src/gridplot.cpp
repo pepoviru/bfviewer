@@ -190,7 +190,7 @@ void gridplot::resetzoom()
     bool ze = zoomer->isEnabled();
     bool pe = panner->isEnabled();
     zoomer->setEnabled(true);
-    panner->setEnabled(false);
+    panner->setEnabled(true);
     zoomer->zoom(zoombase);
     //int numzooms = zoomer->
     p->replot();
@@ -240,7 +240,8 @@ void gridplot::setoffset(int milliseconds)
     gridXunits = QString("seconds");
     //Limits (in real units) of the horizontal axis of the grid
     gridXmin = 0.0; // t0 = 0.0
-    gridXmax = 2.0 + _timeoffset; // tend = 2.48 seconds
+//    gridXmax = 2.0 + _timeoffset; // tend = 2.0 seconds
+    gridXmax = 10.0 + _timeoffset; // tend = 10.0 seconds
     //Major and minor steps (in real units) of the horizontal axis of the grid
     gridXmajorstep = 0.20; // 200 ms;
     gridXminorstep = 0.04; // 40 ms;
@@ -250,7 +251,8 @@ void gridplot::setoffset(int milliseconds)
     //Vertical axis
     gridYunits = QString("mV");
     //Limits (in real units) of the horizontal axis of the grid
-    gridYmin = -1.0; //-1.0 mV
+//    gridYmin = -1.0; //-1.0 mV
+    gridYmin = -1.5*12; //-1.0 mV
     gridYmax = 2.0; //1.5 mV
     //Major and minor steps (in real units) of the horizontal axis of the grid
     gridYmajorstep = 0.5; // 0.5 mV

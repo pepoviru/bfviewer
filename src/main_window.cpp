@@ -35,6 +35,7 @@
 #include "main_window.h"
 #include "moc_main_window.cpp"
 
+#include <qwt/qwt_plot_marker.h>
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
@@ -70,28 +71,46 @@ void MainWindow::setInitialTimeDisplay(int start)
 {
     std::size_t ncols = 25*3600*1000;
     //TODO: move plotting to appropiate method
-    std::size_t numofplottedsamples = 2*1000; //Plot 2 seconds
-    std::vector<double> xs(numofplottedsamples);
-    std::vector<double> ys(numofplottedsamples);
-
-    std::string strTitle = "Row1";
-    QwtPlotCurve *tscurve = new QwtPlotCurve((char *)strTitle.c_str());
-
-    for (std::size_t x = 0; x < numofplottedsamples; ++x)
-    {
-        if (x+start<ncols){
-            xs[x] = (x+start)/1000.0; //position in seconds
-            ys[x] = (*_bf)(0,x+start); //y value of that sample
-        }
-    }
-
-    tscurve->setSamples(&xs[0],&ys[0],xs.size());
-    tscurve->setPen(QPen(Qt::black));
+//    std::size_t numofplottedsamples = 2*1000; //Plot 2 seconds
+        std::size_t numofplottedsamples = 10*1000; //Plot 10 seconds
     _gridPlot->p->detachItems();
     _gridPlot->setoffset(start);
-    tscurve->attach(_gridPlot->p);
+
+    double interrowoffset = -1.5;
+    for (std::size_t row=0; row<12; ++row){
+//    for (std::size_t row=0; row<1; ++row){
+        std::vector<double> xs(numofplottedsamples);
+        std::vector<double> ys(numofplottedsamples);
+
+        std::stringstream strst;
+        std::string strTitle = "Row";
+        strst << strTitle << "-" << row;
+        strTitle = strst.str();
+        QwtPlotCurve *tscurve = new QwtPlotCurve((char *)strTitle.c_str());
+
+        for (std::size_t x = 0; x < numofplottedsamples; ++x)
+        {
+            if (x+start<ncols){
+                xs[x] = (x+start)/1000.0; //position in seconds
+                ys[x] = row*interrowoffset + (*_bf)(0,x+start); //y value of that sample
+            }
+        }
+
+        tscurve->setSamples(&xs[0],&ys[0],xs.size());
+        tscurve->setPen(QPen(Qt::black));
+
+        QwtPlotMarker *rowNameText = new QwtPlotMarker();
+        rowNameText->setLabel(QString(strTitle.c_str()));
+        rowNameText->setXValue(xs[0]+0.25);
+        rowNameText->setYValue(row*interrowoffset-0.5);
+//        rowNameText->setSpacing(10.0);
+        rowNameText->attach(_gridPlot->p);
+//        rowNameText->setLineStyle(QwtPlotMarker::VLine);
+//        rowNameText->setLinePen(QPen(Qt::cyan,  2.0));
+
+        tscurve->attach(_gridPlot->p);
+    }
     _gridPlot->resetzoom();
-//    std::cout << "Starting in time " << xs[0] << " s." << std::endl;
 }
 
 void MainWindow::loadFile(const std::string filename)
@@ -107,24 +126,26 @@ void MainWindow::loadFile(const std::string filename)
 
     //TODO: move scrollbar reset to appropiate method
     _sbTime->setRange(0, ncols);
-	//TODO: move plotting to appropiate method
-    std::size_t numofplottedsamples = 2*1000; //Plot first 2 seconds
-	std::vector<double> xs(numofplottedsamples);
-	std::vector<double> ys(numofplottedsamples);
+    setInitialTimeDisplay(0);
 
-	std::string strTitle = "Row1";
-	QwtPlotCurve *tscurve = new QwtPlotCurve((char *)strTitle.c_str());
+//    //TODO: move plotting to appropiate method
+//    std::size_t numofplottedsamples = 2*1000; //Plot first 2 seconds
+//	std::vector<double> xs(numofplottedsamples);
+//	std::vector<double> ys(numofplottedsamples);
 
-	for (std::size_t x = 0; x < numofplottedsamples; ++x)
-	{
-		xs[x] = x/1000.0;
-        ys[x] = (*_bf)(0,x);
-	}
+//	std::string strTitle = "Row1";
+//	QwtPlotCurve *tscurve = new QwtPlotCurve((char *)strTitle.c_str());
 
-	tscurve->setSamples(&xs[0],&ys[0],xs.size());
-    tscurve->setPen(QPen(Qt::black));
-    tscurve->attach(_gridPlot->p);
-    _gridPlot->resetzoom();
+//	for (std::size_t x = 0; x < numofplottedsamples; ++x)
+//	{
+//		xs[x] = x/1000.0;
+//        ys[x] = (*_bf)(0,x);
+//	}
+
+//	tscurve->setSamples(&xs[0],&ys[0],xs.size());
+//    tscurve->setPen(QPen(Qt::black));
+//    tscurve->attach(_gridPlot->p);
+//    _gridPlot->resetzoom();
 
 }
 
