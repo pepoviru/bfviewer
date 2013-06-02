@@ -36,7 +36,7 @@ MainWindow::MainWindow(QMainWindow* parent, const po::variables_map &vm, const p
 
 void MainWindow::loadFile(const std::string filename, const std::string fileformat)
 {
-    boostfs::path ext = boostfs::path(filename).extension();
+//    boostfs::path ext = boostfs::path(filename).extension();
 //TODO: implement load based on bufferedfile 
 }
 

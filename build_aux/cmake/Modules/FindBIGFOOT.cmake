@@ -1,0 +1,46 @@
+# - Find a BIGFOOT library 
+# This module defines
+#  BIGFOOT_LIBRARIES, the libraries needed to use BIGFOOT.
+#  BIGFOOT_INCLUDE, the includes needed to use BIGFOOT.
+#  BIGFOOT_FOUND, If false, do not try to use BIGFOOT.
+# also defined, but not for general use are
+#  BIGFOOT_LIBRARY, where to find the BIGFOOT library.
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+	SET(BIGFOOT_NAMES ${BIGFOOT_NAMES} bigfoot)
+else()
+	SET(BIGFOOT_NAMES ${BIGFOOT_NAMES} bigfoot-dbg)
+endif()
+
+FIND_LIBRARY(BIGFOOT_LIBRARY
+  NAMES ${BIGFOOT_NAMES}
+  PATHS /usr/lib64/ /usr/lib/ /usr/local/lib64 /usr/local/lib
+  )
+
+FIND_PATH(BIGFOOT_INCLUDE
+  NAMES "bigfoot/config.hpp"
+  PATH_SUFFIXES include
+  )
+
+IF (BIGFOOT_LIBRARY AND BIGFOOT_INCLUDE)
+  SET(BIGFOOT_LIBRARIES ${BIGFOOT_LIBRARY})
+  SET(BIGFOOT_FOUND "YES")
+ELSE (BIGFOOT_LIBRARY AND BIGFOOT_INCLUDE)
+  SET(BIGFOOT_FOUND "NO")
+ENDIF ()
+
+
+IF (BIGFOOT_FOUND)
+   IF (NOT BIGFOOT_FIND_QUIETLY)
+      MESSAGE(STATUS "Found BIGFOOT library: ${BIGFOOT_LIBRARIES}")
+   ENDIF (NOT BIGFOOT_FIND_QUIETLY)
+ELSE (BIGFOOT_FOUND)
+   IF (BIGFOOT_FIND_REQUIRED)
+      MESSAGE(FATAL_ERROR "Could not find a BIGFOOT library")
+   ENDIF (BIGFOOT_FIND_REQUIRED)
+ENDIF (BIGFOOT_FOUND)
+
+# Deprecated declarations.
+MARK_AS_ADVANCED(
+  BIGFOOT_LIBRARY
+  )

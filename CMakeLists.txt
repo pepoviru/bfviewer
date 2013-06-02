@@ -37,7 +37,7 @@ set(BFVIEWER_VERSION_PATCH ${VER_PATCH})
 CONFIGURE_FILE( ${CMAKE_SOURCE_DIR}/src/config.hpp.cmake ${CMAKE_SOURCE_DIR}/src/config.hpp )
 
 project(bfviewer)
-set(PROJECT_LONGNAME "ECGViewer")
+set(PROJECT_LONGNAME "BFViewer")
 set(PROJECT_VERSION ${BFVIEWER_VERSION})
 
 # If no build type is specified, default to "Release"
@@ -94,6 +94,17 @@ if(Boost_FOUND)
         set(BFVIEWER_LIBRARIES "${Boost_LIBRARIES}" CACHE INTERNAL "BFVIEWER LIBRARIES")
 else()
         message(FATAL_ERROR "Boost not found")
+endif()
+
+include(FindBIGFOOT)
+if(BIGFOOT_FOUND)
+        message(STATUS "BIGFOOT libraries: ${BIGFOOT_LIBRARIES}")
+        message(STATUS "BIGFOOT includes: ${BIGFOOT_INCLUDE}")
+
+        set(BFVIEWER_LIBRARIES "${BFVIEWER_LIBRARIES};${BIGFOOT_LIBRARIES}" CACHE INTERNAL "BFVIEWER LIBRARIES")
+        include_directories(${BIGFOOT_INCLUDE})
+else()
+        message(FATAL_ERROR "BIGFOOT not found")
 endif()
 
 include(FindECGLIB)

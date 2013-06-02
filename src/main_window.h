@@ -24,7 +24,7 @@
 // #include <QSvgGenerator>
 #include "ui_main_window.h"
 
-//#include <bigfoot.h>
+#include <bigfoot/bigfoot.hpp>
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
@@ -45,6 +45,8 @@ namespace po = boost::program_options;
 //#include <sstream>
 
 //#include <stdexcept>
+
+#include "config.hpp"
 
 class MainWindow : public QMainWindow
 {
@@ -68,13 +70,14 @@ class MainWindow : public QMainWindow
 
 	// Slots
 	private Q_SLOTS:
-    		void about();
+        void openFile();
+        void about();
 		void license();
 	private:
 		// Private attributes:
 		Ui::MainWindow _ui;
 		po::options_description _visible;
-
+        QString _lastDirectory;
 		QString appname;
 		//Private methods
 };
