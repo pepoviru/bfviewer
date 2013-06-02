@@ -36,6 +36,9 @@ MainWindow::MainWindow(QMainWindow* parent, const po::variables_map &vm, const p
     _ui.gridPlot->addWidget(_gridPlot.get());
 
     _sbTime = new QScrollBar(Qt::Horizontal,this);
+    _sbTime->setPageStep(200); //page step 200ms
+    _sbTime->setSingleStep(40); //page step 40ms
+//    _sbTime = _ui.sbTime;
     connect(_sbTime, SIGNAL(valueChanged(int)), this, SLOT(setInitialTimeDisplay(int)));
     _ui.gridPlot->addWidget(_sbTime);
 
@@ -46,8 +49,9 @@ MainWindow::MainWindow(QMainWindow* parent, const po::variables_map &vm, const p
 
 void MainWindow::setInitialTimeDisplay(int start)
 {
+    std::size_t ncols = 25*3600*1000;
     //TODO: move plotting to appropiate method
-    std::size_t numofplottedsamples = 1*60*1000; //Plot 1 minute
+    std::size_t numofplottedsamples = 2*1000; //Plot 2 seconds
     std::vector<double> xs(numofplottedsamples);
     std::vector<double> ys(numofplottedsamples);
 
@@ -56,8 +60,10 @@ void MainWindow::setInitialTimeDisplay(int start)
 
     for (std::size_t x = 0; x < numofplottedsamples; ++x)
     {
-        xs[x] = (x+start)/1000.0; //position in seconds
-        ys[x] = (*_bf)(0,x+start); //y value of that sample
+        if (x+start<ncols){
+            xs[x] = (x+start)/1000.0; //position in seconds
+            ys[x] = (*_bf)(0,x+start); //y value of that sample
+        }
     }
 
     tscurve->setSamples(&xs[0],&ys[0],xs.size());
@@ -66,9 +72,7 @@ void MainWindow::setInitialTimeDisplay(int start)
     _gridPlot->setoffset(start);
     tscurve->attach(_gridPlot->p);
     _gridPlot->resetzoom();
-//    _gridPlot->p->replot();
-
-    std::cout << "Starting in time " << xs[0] << " s." << std::endl;
+//    std::cout << "Starting in time " << xs[0] << " s." << std::endl;
 }
 
 void MainWindow::loadFile(const std::string filename)
@@ -85,7 +89,7 @@ void MainWindow::loadFile(const std::string filename)
     //TODO: move scrollbar reset to appropiate method
     _sbTime->setRange(0, ncols);
 	//TODO: move plotting to appropiate method
-    std::size_t numofplottedsamples = 1*60*1000; //Plot first 1 minutes
+    std::size_t numofplottedsamples = 2*1000; //Plot first 2 seconds
 	std::vector<double> xs(numofplottedsamples);
 	std::vector<double> ys(numofplottedsamples);
 

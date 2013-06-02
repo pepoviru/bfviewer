@@ -77,7 +77,7 @@ private:
     //Scale factor in pixels per unit of the horizontal axis
     double gridYpixelsperunit;
 
-    double _timeooffset;
+    double _timeoffset;
 
     //Zomming tools
     QwtPlotZoomer *zoomer;
