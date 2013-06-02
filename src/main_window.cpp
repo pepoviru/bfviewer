@@ -58,7 +58,6 @@ MainWindow::MainWindow(QMainWindow* parent, const po::variables_map &vm, const p
     _sbTime = new QScrollBar(Qt::Horizontal,this);
     _sbTime->setPageStep(200); //page step 200ms
     _sbTime->setSingleStep(40); //page step 40ms
-//    _sbTime = _ui.sbTime;
     connect(_sbTime, SIGNAL(valueChanged(int)), this, SLOT(setInitialTimeDisplay(int)));
     _ui.gridPlot->addWidget(_sbTime);
 
@@ -103,10 +102,7 @@ void MainWindow::setInitialTimeDisplay(int start)
         rowNameText->setLabel(QString(strTitle.c_str()));
         rowNameText->setXValue(xs[0]+0.25);
         rowNameText->setYValue(row*interrowoffset-0.5);
-//        rowNameText->setSpacing(10.0);
         rowNameText->attach(_gridPlot->p);
-//        rowNameText->setLineStyle(QwtPlotMarker::VLine);
-//        rowNameText->setLinePen(QPen(Qt::cyan,  2.0));
 
         tscurve->attach(_gridPlot->p);
     }
@@ -115,8 +111,7 @@ void MainWindow::setInitialTimeDisplay(int start)
 
 void MainWindow::loadFile(const std::string filename)
 {
-	boostfs::path ext = boostfs::path(filename).extension();
-	//TODO: implement load based on bufferedfile 
+    boostfs::path ext = boostfs::path(filename).extension();
 	std::size_t nrows = 12; //File of 12 rows (channels)
 	std::size_t ncols = 25*3600*1000; //Containing 25 hours sampled at 1khz
 	std::size_t nummappedels = 12*3600*1000;//map 1 hour
@@ -127,26 +122,6 @@ void MainWindow::loadFile(const std::string filename)
     //TODO: move scrollbar reset to appropiate method
     _sbTime->setRange(0, ncols);
     setInitialTimeDisplay(0);
-
-//    //TODO: move plotting to appropiate method
-//    std::size_t numofplottedsamples = 2*1000; //Plot first 2 seconds
-//	std::vector<double> xs(numofplottedsamples);
-//	std::vector<double> ys(numofplottedsamples);
-
-//	std::string strTitle = "Row1";
-//	QwtPlotCurve *tscurve = new QwtPlotCurve((char *)strTitle.c_str());
-
-//	for (std::size_t x = 0; x < numofplottedsamples; ++x)
-//	{
-//		xs[x] = x/1000.0;
-//        ys[x] = (*_bf)(0,x);
-//	}
-
-//	tscurve->setSamples(&xs[0],&ys[0],xs.size());
-//    tscurve->setPen(QPen(Qt::black));
-//    tscurve->attach(_gridPlot->p);
-//    _gridPlot->resetzoom();
-
 }
 
 

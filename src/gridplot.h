@@ -58,7 +58,6 @@ private:
     //private methods
     void resizeContents();
     void generateGrid();
-    void initializegrid();
     void plotgrid();
 
     //private properties

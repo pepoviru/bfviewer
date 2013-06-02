@@ -37,8 +37,8 @@ gridplot::gridplot(QWidget *parent) :
 
     //initialize grid
     _timeoffset=0.0;
-    initializegrid();
-    //plotgrid();
+    setoffset(_timeoffset);
+
     //initialize zooming tools
 
     zoomer = new QwtPlotZoomer( p->xBottom,p->yLeft,p->canvas() );
@@ -66,12 +66,9 @@ void gridplot::resizeEvent(QResizeEvent * re)
 
 void gridplot::resizeContents()
 {
-//    int margin = 10;
-    int margin = 70;
+    int margin = 50;
     int containerWidth = this->parentWidget()->width() - margin;
     int containerHeight = this->parentWidget()->height() - margin;
-    //TODO: (Enhancement) Establish maximumSize and minimumSize for grid squares and update xEndTimeInSeconds and/or yMinValueInMicrovolts and replot as needed. Then go ahead with aspect-ratio
-    //double aspectRatio = ((xEndTimeInSeconds - xStartTimeInSeconds)/gridXMajorStepInSeconds)/((yMaxValueInMicrovolts - yMinValueInMicrovolts)/gridYMajorStepInMicrovolts);//1.0;
     double aspectRatio = ((gridXmax - gridXmin - _timeoffset)/gridXmajorstep)/((gridYmax - gridYmin)/gridYmajorstep);//1.0;
     int contentsHeight = containerHeight ;
     int contentsWidth = containerHeight * aspectRatio;
@@ -83,40 +80,6 @@ void gridplot::resizeContents()
 }
 
 //grid methods
-void gridplot::initializegrid()
-{
-//    //Top Left corner of the grid in the QwtPlot space (pixels)
-//    gridlocation.setX(0);
-//    gridlocation.setY(0);
-//    //Pens for major and minor lines of the grid
-//    QBrush orangeBrush = QBrush(QColor::fromRgb(255,127,0));
-//    gridmajorpen = QPen(orangeBrush, 0, Qt::SolidLine);
-//    gridminorpen = QPen(orangeBrush, 0, Qt::DotLine);
-
-//    //Horizontal axis
-//    gridXunits = QString("seconds");
-//    //Limits (in real units) of the horizontal axis of the grid
-//    gridXmin = 0.0; // t0 = 0.0
-//    gridXmax = 2.48; // tend = 2.48 seconds
-//    //Major and minor steps (in real units) of the horizontal axis of the grid
-//    gridXmajorstep = 0.20; // 200 ms;
-//    gridXminorstep = 0.04; // 40 ms;
-//    //Scale factor in pixels per unit of the horizontal axis
-//    gridXpixelsperunit = 1000.0; // 1 pixel = 1ms
-
-//    //Vertical axis
-//    gridYunits = QString("mV");
-//    //Limits (in real units) of the horizontal axis of the grid
-//    gridYmin = -1.0; //-1.0 mV
-//    gridYmax = 2.0; //1.5 mV
-//    //Major and minor steps (in real units) of the horizontal axis of the grid
-//    gridYmajorstep = 0.5; // 0.5 mV
-//    gridYminorstep = 0.1; // 0.1 mV
-//    //Scale factor in pixels per unit of the horizontal axis
-//    gridYpixelsperunit = 1000.0; // 1 pixel = 1uV
-
-    setoffset(_timeoffset);
-}
 
 void gridplot::plotgrid()
 {
@@ -192,18 +155,11 @@ void gridplot::resetzoom()
     zoomer->setEnabled(true);
     panner->setEnabled(true);
     zoomer->zoom(zoombase);
-    //int numzooms = zoomer->
     p->replot();
     resizeContents();
     zoomer->setEnabled(ze);
     panner->setEnabled(pe);
-//    //FIXME: Save previous zoom
-//    generateGrid();
-//    if (p!=NULL)
-//        p->replot();
-//    generateGrid();
     resizeContents();
-//    //FIXME: Restore previous zoom
 }
 void gridplot::setZoomEnabled(bool v)
 {
