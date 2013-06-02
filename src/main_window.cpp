@@ -27,7 +27,7 @@ MainWindow::MainWindow(QMainWindow* parent, const po::variables_map &vm, const p
     qApp->processEvents();
     
     appname = QString("Bigfoot viewer");
-
+    connect(_ui.actionE_xit, SIGNAL(triggered()), this, SLOT(close()));
     connect(_ui.action_Open_file, SIGNAL(triggered()), this, SLOT(openFile()));
     connect(_ui.action_About, SIGNAL(triggered()), this, SLOT(about()));
     connect(_ui.action_License, SIGNAL(triggered()), this, SLOT(license()));
@@ -60,7 +60,9 @@ void MainWindow::about()
 {
     QMessageBox msgBox;
     msgBox.setWindowTitle(appname);
-    QString message = QString("bfviewer %1 \nbigfoot %2 \n\n(c) Jose Vicente 2013. \n\nSee license details in Help->License").arg(BFVIEWER_VERSION).arg(BIGFOOT_VERSION);
+    //FIXME: Add BIGFOOT_VERSION
+//    QString message = QString("bfviewer %1 \nbigfoot %2 \n\n(c) Jose Vicente 2013. \n\nSee license details in Help->License").arg(BFVIEWER_VERSION).arg(BIGFOOT_VERSION);
+        QString message = QString("bfviewer %1 \n\n(c) Jose Vicente 2013. \n\nSee license details in Help->License").arg(BFVIEWER_VERSION);
     msgBox.setText(message);
     msgBox.exec();
 }
@@ -72,4 +74,52 @@ void MainWindow::license()
     msgBox.setText("Widget displaying LICENSE file \nincluded as resource in QT");
     msgBox.exec();
 }
+void MainWindow::closeEvent ( QCloseEvent * event )
+{
+    event->ignore();
+    bool continueWithNext = false;
+//    if (_arePendingChanges)
+//    {
+//        //ask user whether to save the changes or not and proceed
+//        switch( QMessageBox::information( this, appname,
+//                                          "There are not saved changes",
+//                                          "Save changes", "Cancel", "Discard changes",
+//                                          0, 1 ) ) {
+//        case 0:
+//            savechanges();
+//            continueWithNext = !_arePendingChanges;
+//            break;
+//        case 1:
+//        default:
+//            continueWithNext = false;
+//            //FIXME reset the tree's selected item to the previous one
+//            break;
+//        case 2:
+//            continueWithNext = true;
+//            _arePendingChanges = false;
+//            break;
+//        }
+//    }
+//    else
+        continueWithNext = true;
+    if (continueWithNext)
+    {
+        //Setting parent will keep messagebox in the center of QMainWindow
+        QMessageBox *msgBox = new QMessageBox(this);
+        msgBox->setWindowTitle(appname);
+        msgBox->setText("Are you sure you want to exit?");
+
+        QPushButton *yesButton = msgBox->addButton(tr("Yes"), QMessageBox::ActionRole);
+        msgBox->addButton(tr("No"), QMessageBox::ActionRole);
+        msgBox->exec();
+
+        //If user clicks 'Yes'  button , accept QCloseEvent (Close Window)
+        if ((QPushButton*)msgBox->clickedButton() == yesButton)
+        {
+            event->accept();
+        }
+    }
+}
+
+
 

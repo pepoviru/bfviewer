@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 	po::notify(vm);
 
 	if(vm.count("help")) {
-		std::cout << "Usage: ecgviewer [options]" << std::endl;
+        std::cout << "Usage: bfviewer [options]" << std::endl;
 		std::cout << visible << std::endl;
 
 		return EXIT_SUCCESS;

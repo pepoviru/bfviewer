@@ -2,9 +2,9 @@
  * Copyright (c) 2013 <Jose Vicente> All rights reserved.     *
  * This code is licensed under BSD license: see BSD.LICENSE   *
  *************************************************************/
-#ifndef BFVIEWER_CONFIG_LJ_2013_06_01
+#ifndef BFVIEWER_CONFIG_JVR_2013_06_01
 
-#define BFVIEWER_CONFIG_LJ_2013_06_01
+#define BFVIEWER_CONFIG_JVR_2013_06_01
 
 #define BFVIEWER_VERSION "@BFVIEWER_VERSION@"
 
