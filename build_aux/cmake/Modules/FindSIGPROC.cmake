@@ -1,0 +1,41 @@
+# - Find a SIGPROC library 
+# This module defines
+#  SIGPROC_LIBRARIES, the libraries needed to use SIGPROC.
+#  SIGPROC_INCLUDE, the includes needed to use SIGPROC.
+#  SIGPROC_FOUND, If false, do not try to use SIGPROC.
+# also defined, but not for general use are
+#  SIGPROC_LIBRARY, where to find the SIGPROC library.
+
+SET(SIGPROC_NAMES ${SIGPROC_NAMES} sigproc)
+FIND_LIBRARY(SIGPROC_LIBRARY
+  NAMES ${SIGPROC_NAMES}
+  PATHS /usr/lib64/ /usr/lib/ /usr/local/lib64 /usr/local/lib
+  )
+
+FIND_PATH(SIGPROC_INCLUDE
+  NAMES "sigproc/butter.hpp"
+  PATH_SUFFIXES include
+  )
+
+IF (SIGPROC_LIBRARY AND SIGPROC_INCLUDE)
+  SET(SIGPROC_LIBRARIES ${SIGPROC_LIBRARY})
+  SET(SIGPROC_FOUND "YES")
+ELSE (SIGPROC_LIBRARY AND SIGPROC_INCLUDE)
+  SET(SIGPROC_FOUND "NO")
+ENDIF ()
+
+
+IF (SIGPROC_FOUND)
+   IF (NOT SIGPROC_FIND_QUIETLY)
+      MESSAGE(STATUS "Found SIGPROC library: ${SIGPROC_LIBRARIES}")
+   ENDIF (NOT SIGPROC_FIND_QUIETLY)
+ELSE (SIGPROC_FOUND)
+   IF (SIGPROC_FIND_REQUIRED)
+      MESSAGE(FATAL_ERROR "Could not find a SIGPROC library")
+   ENDIF (SIGPROC_FIND_REQUIRED)
+ENDIF (SIGPROC_FOUND)
+
+# Deprecated declarations.
+MARK_AS_ADVANCED(
+  SIGPROC_LIBRARY
+  )

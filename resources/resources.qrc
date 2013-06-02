@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="appicon">bfviewericon.png</file>
+        <file alias="licensefile">LICENSE</file>
+    </qresource>
+</RCC>
