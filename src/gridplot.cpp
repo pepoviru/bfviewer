@@ -78,7 +78,7 @@ void gridplot::initializegrid()
     gridXunits = QString("seconds");
     //Limits (in real units) of the horizontal axis of the grid
     gridXmin = 0.0; // t0 = 0.0
-    gridXmax = 1.48; // tend = 1.48 seconds
+    gridXmax = 2.48; // tend = 2.48 seconds
     //Major and minor steps (in real units) of the horizontal axis of the grid
     gridXmajorstep = 0.20; // 200 ms;
     gridXminorstep = 0.04; // 40 ms;

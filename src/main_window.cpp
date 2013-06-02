@@ -34,12 +34,40 @@ MainWindow::MainWindow(QMainWindow* parent, const po::variables_map &vm, const p
 
     _gridPlot = boost::shared_ptr<gridplot>(new gridplot(this));
     _ui.gridPlot->addWidget(_gridPlot.get());
+
+    if(_vm.count("input.file")) {
+	    loadFile(_vm["input.file"].as<std::string>());
+    }
 }
 
-void MainWindow::loadFile(const std::string filename, const std::string fileformat)
+void MainWindow::loadFile(const std::string filename)
 {
-//    boostfs::path ext = boostfs::path(filename).extension();
-//TODO: implement load based on bufferedfile 
+	boostfs::path ext = boostfs::path(filename).extension();
+	//TODO: implement load based on bufferedfile 
+	std::size_t nrows = 12; //File of 12 rows (channels)
+	std::size_t ncols = 25*3600*1000; //Containing 25 hours sampled at 1khz
+	std::size_t nummappedels = 12*3600*1000;//map 1 hour
+	std::size_t offset = 0; //only matrix, no header, no offset
+	_bf = NULL;
+	_bf = new bigfoot::bufferedfile(filename.c_str(), nrows, ncols, nummappedels, offset);
+	//TODO: move plotting to appropiate method
+	std::size_t numofplottedsamples = 2.5*1000; //Plot first 2.5 seconds
+	std::vector<double> xs(numofplottedsamples);
+	std::vector<double> ys(numofplottedsamples);
+
+	std::string strTitle = "Row1";
+	QwtPlotCurve *tscurve = new QwtPlotCurve((char *)strTitle.c_str());
+
+	for (std::size_t x = 0; x < numofplottedsamples; ++x)
+	{
+		xs[x] = x/1000.0;
+		ys[x] = (*_bf)(0,x);
+	}
+
+	tscurve->setSamples(&xs[0],&ys[0],xs.size());
+	tscurve->setPen(QPen(Qt::black));
+	tscurve->attach(_gridPlot->p);
+
 }
 
 
@@ -54,7 +82,7 @@ void MainWindow::openFile()
     {
         _lastDirectory = s;
         QFileInfo pathInfo(_lastDirectory);
-        loadFile(pathInfo.filePath().toStdString(), _vm["input.format"].as<std::string>());
+        loadFile(pathInfo.filePath().toStdString());
     }
 }
 
@@ -62,9 +90,7 @@ void MainWindow::about()
 {
     QMessageBox msgBox;
     msgBox.setWindowTitle(appname);
-    //FIXME: Add BIGFOOT_VERSION
     QString message = QString("bfviewer %1 \nbigfoot %2 \n\n(c) Jose Vicente 2013. \n\nSee license details in Help->License").arg(BFVIEWER_VERSION).arg(BIGFOOT_VERSION);
-//        QString message = QString("bfviewer %1 \n\n(c) Jose Vicente 2013. \n\nSee license details in Help->License").arg(BFVIEWER_VERSION);
     msgBox.setText(message);
     msgBox.exec();
 }
@@ -118,8 +144,9 @@ void MainWindow::closeEvent ( QCloseEvent * event )
         //If user clicks 'Yes'  button , accept QCloseEvent (Close Window)
         if ((QPushButton*)msgBox->clickedButton() == yesButton)
         {
-            event->accept();
-        }
+		_bf = NULL;
+		event->accept();
+	}
     }
 }
 

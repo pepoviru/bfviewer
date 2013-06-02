@@ -64,7 +64,7 @@ class MainWindow : public QMainWindow
         void closeEvent ( QCloseEvent * event );
 	// Helpers:
 	protected:
-        void loadFile(const std::string filename, const std::string fileformat);
+        void loadFile(const std::string filename);
 
 	// Attributes:
 	protected:
@@ -79,8 +79,10 @@ class MainWindow : public QMainWindow
 		// Private attributes:
 		Ui::MainWindow _ui;
 		po::options_description _visible;
-        QString _lastDirectory;
+		QString _lastDirectory;
 		QString appname;
+
+		bigfoot::bufferedfile *_bf;
 		//Private methods
 };
 
