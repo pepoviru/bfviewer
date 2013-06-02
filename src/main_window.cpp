@@ -66,6 +66,7 @@ void MainWindow::setInitialTimeDisplay(int start)
     _gridPlot->setoffset(start);
     tscurve->attach(_gridPlot->p);
     _gridPlot->resetzoom();
+//    _gridPlot->p->replot();
 
     std::cout << "Starting in time " << xs[0] << " s." << std::endl;
 }

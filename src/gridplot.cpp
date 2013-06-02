@@ -110,8 +110,8 @@ void gridplot::plotgrid()
 
     //horizontal major lines
     int numberoflines = (gridYmax - gridYmin)/gridYmajorstep;
-    xlocs[0]=gridXmin + _timeooffset;
-    xlocs[1]=gridXmax + _timeooffset;
+    xlocs[0]=gridXmin;
+    xlocs[1]=gridXmax;
     for (int i=0;i<=numberoflines;++i)
     {
         anyline = new QwtPlotCurve();
@@ -140,7 +140,7 @@ void gridplot::plotgrid()
     for (int i=0;i<=numberoflines;++i)
     {
         anyline = new QwtPlotCurve();
-        xlocs[0] = xlocs[1] = gridXmin + gridXmajorstep*(i) + _timeooffset;
+        xlocs[0] = xlocs[1] = gridXmin + gridXmajorstep*(i);
         anyline->setSamples(&xlocs[0],&ylocs[0],xlocs.size());
         anyline->setPen(gridmajorpen);
         anyline->setStyle(QwtPlotCurve::Lines);
@@ -151,7 +151,7 @@ void gridplot::plotgrid()
     for (int i=0;i<=numberoflines;++i)
     {
         anyline = new QwtPlotCurve();
-        xlocs[0] = xlocs[1] = gridXmin + gridXminorstep*(i) + _timeooffset;
+        xlocs[0] = xlocs[1] = gridXmin + gridXminorstep*(i);
         anyline->setSamples(&xlocs[0],&ylocs[0],xlocs.size());
         anyline->setPen(gridminorpen);
         anyline->setStyle(QwtPlotCurve::Lines);
@@ -205,7 +205,7 @@ void gridplot::setoffset(int milliseconds)
 {
     _timeooffset = milliseconds/1000.0;
     //Top Left corner of the grid in the QwtPlot space (pixels)
-    gridlocation.setX(0);
+    gridlocation.setX(0-_timeooffset);
     gridlocation.setY(0);
     //Pens for major and minor lines of the grid
     QBrush orangeBrush = QBrush(QColor::fromRgb(255,127,0));
