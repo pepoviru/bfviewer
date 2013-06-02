@@ -35,9 +35,39 @@ MainWindow::MainWindow(QMainWindow* parent, const po::variables_map &vm, const p
     _gridPlot = boost::shared_ptr<gridplot>(new gridplot(this));
     _ui.gridPlot->addWidget(_gridPlot.get());
 
+    _sbTime = new QScrollBar(Qt::Horizontal,this);
+    connect(_sbTime, SIGNAL(valueChanged(int)), this, SLOT(setInitialTimeDisplay(int)));
+    _ui.gridPlot->addWidget(_sbTime);
+
     if(_vm.count("input.file")) {
 	    loadFile(_vm["input.file"].as<std::string>());
     }
+}
+
+void MainWindow::setInitialTimeDisplay(int start)
+{
+    //TODO: move plotting to appropiate method
+    std::size_t numofplottedsamples = 1*60*1000; //Plot 1 minute
+    std::vector<double> xs(numofplottedsamples);
+    std::vector<double> ys(numofplottedsamples);
+
+    std::string strTitle = "Row1";
+    QwtPlotCurve *tscurve = new QwtPlotCurve((char *)strTitle.c_str());
+
+    for (std::size_t x = 0; x < numofplottedsamples; ++x)
+    {
+        xs[x] = (x+start)/1000.0; //position in seconds
+        ys[x] = (*_bf)(0,x+start); //y value of that sample
+    }
+
+    tscurve->setSamples(&xs[0],&ys[0],xs.size());
+    tscurve->setPen(QPen(Qt::black));
+    _gridPlot->p->detachItems();
+    _gridPlot->setoffset(start);
+    tscurve->attach(_gridPlot->p);
+    _gridPlot->resetzoom();
+
+    std::cout << "Starting in time " << xs[0] << " s." << std::endl;
 }
 
 void MainWindow::loadFile(const std::string filename)
@@ -50,8 +80,11 @@ void MainWindow::loadFile(const std::string filename)
 	std::size_t offset = 0; //only matrix, no header, no offset
 	_bf = NULL;
 	_bf = new bigfoot::bufferedfile(filename.c_str(), nrows, ncols, nummappedels, offset);
+
+    //TODO: move scrollbar reset to appropiate method
+    _sbTime->setRange(0, ncols);
 	//TODO: move plotting to appropiate method
-	std::size_t numofplottedsamples = 15*60*1000; //Plot first 15 minutes
+    std::size_t numofplottedsamples = 1*60*1000; //Plot first 1 minutes
 	std::vector<double> xs(numofplottedsamples);
 	std::vector<double> ys(numofplottedsamples);
 
@@ -61,12 +94,13 @@ void MainWindow::loadFile(const std::string filename)
 	for (std::size_t x = 0; x < numofplottedsamples; ++x)
 	{
 		xs[x] = x/1000.0;
-		ys[x] = (*_bf)(0,x);
+        ys[x] = (*_bf)(0,x);
 	}
 
 	tscurve->setSamples(&xs[0],&ys[0],xs.size());
-	tscurve->setPen(QPen(Qt::black));
-	tscurve->attach(_gridPlot->p);
+    tscurve->setPen(QPen(Qt::black));
+    tscurve->attach(_gridPlot->p);
+    _gridPlot->resetzoom();
 
 }
 
@@ -149,6 +183,4 @@ void MainWindow::closeEvent ( QCloseEvent * event )
 	}
     }
 }
-
-
 

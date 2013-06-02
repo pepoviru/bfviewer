@@ -22,6 +22,8 @@ public:
     explicit gridplot(QWidget *parent = 0);
     ~gridplot();
 
+    void setoffset(int milliseconds);
+
     //Zomming tools
     void resetzoom();
     void setZoomEnabled(bool v);
@@ -74,6 +76,8 @@ private:
     double gridYminorstep;
     //Scale factor in pixels per unit of the horizontal axis
     double gridYpixelsperunit;
+
+    double _timeooffset;
 
     //Zomming tools
     QwtPlotZoomer *zoomer;

@@ -55,35 +55,38 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 	// Constructors:
-	public:
-		MainWindow(QMainWindow* parent, const po::variables_map &vm, const po::options_description &visible);
+    public:
+        MainWindow(QMainWindow* parent, const po::variables_map &vm, const po::options_description &visible);
 
-	// Public methods:
+        // Public methods:
     public:
         void loadall();
         void closeEvent ( QCloseEvent * event );
-	// Helpers:
-	protected:
+        // Helpers:
+    protected:
         void loadFile(const std::string filename);
 
-	// Attributes:
-	protected:
-		po::variables_map _vm;
-	        boost::shared_ptr<gridplot> _gridPlot;
-	// Slots
-	private Q_SLOTS:
+        // Attributes:
+    protected:
+        po::variables_map _vm;
+        boost::shared_ptr<gridplot> _gridPlot;
+        // Slots
+    private Q_SLOTS:
         void openFile();
         void about();
-		void license();
-	private:
-		// Private attributes:
-		Ui::MainWindow _ui;
-		po::options_description _visible;
-		QString _lastDirectory;
-		QString appname;
+        void license();
+        void setInitialTimeDisplay(int);
+    private:
+        // Private attributes:
+        Ui::MainWindow _ui;
+        po::options_description _visible;
+        QString _lastDirectory;
+        QString appname;
 
-		bigfoot::bufferedfile *_bf;
-		//Private methods
+        bigfoot::bufferedfile *_bf;
+
+        QScrollBar *_sbTime;
+        //Private methods
 };
 
 #endif

@@ -20,7 +20,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <layout class="QHBoxLayout" name="gridPlot"/>
+     <layout class="QVBoxLayout" name="gridPlot"/>
     </item>
    </layout>
   </widget>
