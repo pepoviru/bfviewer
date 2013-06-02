@@ -40,7 +40,8 @@
 //#include <QList>
 //#include <QAbstractItemModel>
 //#include <QModelIndex>
-// #include <QSvgGenerator>
+#include <QSvgGenerator>
+#include <qwt/qwt_plot_renderer.h>
 #include "ui_main_window.h"
 
 #include <bigfoot/bigfoot.hpp>
@@ -95,6 +96,7 @@ class MainWindow : public QMainWindow
         void about();
         void license();
         void setInitialTimeDisplay(int);
+        void printsvg();
     private:
         // Private attributes:
         Ui::MainWindow _ui;

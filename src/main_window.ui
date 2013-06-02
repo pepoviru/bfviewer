@@ -39,6 +39,8 @@
     </property>
     <addaction name="action_Open_file"/>
     <addaction name="separator"/>
+    <addaction name="action_Export_to_SVG"/>
+    <addaction name="separator"/>
     <addaction name="actionE_xit"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
@@ -76,6 +78,11 @@
   <action name="action_License">
    <property name="text">
     <string>&amp;License</string>
+   </property>
+  </action>
+  <action name="action_Export_to_SVG">
+   <property name="text">
+    <string>&amp;Export to SVG</string>
    </property>
   </action>
  </widget>

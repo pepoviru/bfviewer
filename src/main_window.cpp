@@ -49,6 +49,8 @@ MainWindow::MainWindow(QMainWindow* parent, const po::variables_map &vm, const p
     appname = QString("Bigfoot viewer");
     connect(_ui.actionE_xit, SIGNAL(triggered()), this, SLOT(close()));
     connect(_ui.action_Open_file, SIGNAL(triggered()), this, SLOT(openFile()));
+    connect(_ui.action_Export_to_SVG, SIGNAL(triggered()), this, SLOT(printsvg()));
+
     connect(_ui.action_About, SIGNAL(triggered()), this, SLOT(about()));
     connect(_ui.action_License, SIGNAL(triggered()), this, SLOT(license()));
 
@@ -204,3 +206,29 @@ void MainWindow::closeEvent ( QCloseEvent * event )
     }
 }
 
+void MainWindow::printsvg()
+{
+
+//    QString fileName(_record->name2display().append(".svg").c_str());
+    QString fileName("bfviewer.svg");
+    const QList<QByteArray> imageFormats =
+        QImageWriter::supportedImageFormats();
+
+    QStringList filter;
+    filter += "SVG Documents (*.svg)";
+
+    fileName = QFileDialog::getSaveFileName(
+        this, "Export File Name", fileName,
+        filter.join(";;"), NULL, QFileDialog::DontConfirmOverwrite);
+
+    if (!fileName.isEmpty())
+    {
+        QSvgGenerator generator;
+        QwtPlotRenderer plotrender;
+
+        generator.setFileName( fileName );
+        generator.setSize(_gridPlot->size());
+
+        plotrender.renderTo(_gridPlot->p,generator);
+    }
+}
