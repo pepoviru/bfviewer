@@ -50,6 +50,7 @@ gridplot::gridplot(QWidget *parent) :
     magnifier = new QwtPlotMagnifier( p->canvas() );
     magnifier->setMouseButton(Qt::MiddleButton,Qt::NoButton);
 
+    p->enableAxis(QwtPlot::yLeft,false);
     ui->vlPlot->addWidget(p);
 }
 
