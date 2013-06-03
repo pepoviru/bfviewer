@@ -137,8 +137,8 @@ void MainWindow::loadFile(const std::string filename)
     std::size_t nrows = _vm["file.nrows"].as<int>();
     std::size_t nummappedels = _vm["file.num.maped.elements"].as<int>();
     std::size_t offset = _vm["file.offset"].as<int>();
-	_bf = NULL;
-	_bf = new bigfoot::bufferedfile(filename.c_str(), nrows, ncols, nummappedels, offset);
+    _bf = NULL;
+    _bf = new bigfoot::bufferedfile<double>(filename.c_str(), nrows, ncols, nummappedels, offset);
 
     //TODO: move scrollbar reset to appropiate method
     _sbTime->setRange(0, ncols);
