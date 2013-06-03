@@ -55,11 +55,29 @@ MainWindow::MainWindow(QMainWindow* parent, const po::variables_map &vm, const p
     connect(_ui.action_License, SIGNAL(triggered()), this, SLOT(license()));
 
     _gridPlot = boost::shared_ptr<gridplot>(new gridplot(this));
+
+    _gridPlot->gridXunits = QString(_vm["horizontal.axis.units"].as<std::string>().c_str());
+    _gridPlot->gridXpixelsperunit = _vm["horizontal.maxfs"].as<double>();
+    _gridPlot->gridXmin = _vm["Xmin"].as<double>();
+    _gridPlot->gridXmax = _vm["Xmax"].as<double>();
+    _gridPlot->gridXminorstep = _vm["Xstep.minor"].as<double>();
+    _gridPlot->gridXmajorstep = _vm["Xstep.major"].as<double>();
+    _gridPlot->enableAxis(QwtPlot::xBottom,_vm["horizontal.axis.enabled"].as<bool>());
+
+    _gridPlot->gridYunits = QString(_vm["vertical.axis.units"].as<std::string>().c_str());
+    _gridPlot->gridYpixelsperunit = _vm["vertical.maxfs"].as<double>();
+    _gridPlot->gridYmin = _vm["Ymin"].as<double>();
+    _gridPlot->gridYmax = _vm["Ymax"].as<double>();
+    _gridPlot->gridYminorstep = _vm["Ystep.minor"].as<double>();
+    _gridPlot->gridYmajorstep = _vm["Ystep.major"].as<double>();
+    _gridPlot->enableAxis(QwtPlot::yLeft,_vm["vertical.axis.enabled"].as<bool>());
+
+    _gridPlot->timeoffset = _vm["time.offset"].as<double>();
     _ui.gridPlot->addWidget(_gridPlot.get());
 
     _sbTime = new QScrollBar(Qt::Horizontal,this);
-    _sbTime->setPageStep(200); //page step 200ms
-    _sbTime->setSingleStep(40); //page step 40ms
+    _sbTime->setPageStep(_vm["page.step"].as<int>());
+    _sbTime->setSingleStep(_vm["single.step"].as<int>());
     connect(_sbTime, SIGNAL(valueChanged(int)), this, SLOT(setInitialTimeDisplay(int)));
     _ui.gridPlot->addWidget(_sbTime);
 
@@ -70,15 +88,16 @@ MainWindow::MainWindow(QMainWindow* parent, const po::variables_map &vm, const p
 
 void MainWindow::setInitialTimeDisplay(int start)
 {
-    std::size_t ncols = 25*3600*1000;
+    std::size_t ncols = _vm["file.ncols"].as<int>();
+    std::size_t nrows = _vm["file.nrows"].as<int>();
     //TODO: move plotting to appropiate method
-//    std::size_t numofplottedsamples = 2*1000; //Plot 2 seconds
-        std::size_t numofplottedsamples = 10*1000; //Plot 10 seconds
+    std::size_t numofplottedsamples = _vm["plot.num.samples"].as<int>();
     _gridPlot->p->detachItems();
     _gridPlot->setoffset(start);
 
-    double interrowoffset = -1.5;
-    for (std::size_t row=0; row<12; ++row){
+    double interrowoffset = _vm["inter.row.offset"].as<double>();
+
+    for (std::size_t row=0; row<nrows; ++row){
 //    for (std::size_t row=0; row<1; ++row){
         std::vector<double> xs(numofplottedsamples);
         std::vector<double> ys(numofplottedsamples);
@@ -92,8 +111,8 @@ void MainWindow::setInitialTimeDisplay(int start)
         for (std::size_t x = 0; x < numofplottedsamples; ++x)
         {
             if (x+start<ncols){
-                xs[x] = (x+start)/1000.0; //position in seconds
-                ys[x] = row*interrowoffset + (*_bf)(0,x+start); //y value of that sample
+                xs[x] = (x+start)/_gridPlot->gridXpixelsperunit; //position in seconds
+                ys[x] = row*interrowoffset + (*_bf)(row,x+start); //y value of that sample
             }
         }
 
@@ -114,10 +133,10 @@ void MainWindow::setInitialTimeDisplay(int start)
 void MainWindow::loadFile(const std::string filename)
 {
     boostfs::path ext = boostfs::path(filename).extension();
-	std::size_t nrows = 12; //File of 12 rows (channels)
-	std::size_t ncols = 25*3600*1000; //Containing 25 hours sampled at 1khz
-	std::size_t nummappedels = 12*3600*1000;//map 1 hour
-	std::size_t offset = 0; //only matrix, no header, no offset
+    std::size_t ncols = _vm["file.ncols"].as<int>();
+    std::size_t nrows = _vm["file.nrows"].as<int>();
+    std::size_t nummappedels = _vm["file.num.maped.elements"].as<int>();
+    std::size_t offset = _vm["file.offset"].as<int>();
 	_bf = NULL;
 	_bf = new bigfoot::bufferedfile(filename.c_str(), nrows, ncols, nummappedels, offset);
 

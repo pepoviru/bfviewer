@@ -36,12 +36,14 @@ gridplot::gridplot(QWidget *parent) :
     gridXmajorstep(0.20),
     gridXminorstep(0.04),
     gridXpixelsperunit(1000.0),
+    gridXaxisenabled(true),
     gridYunits("mV"),
     gridYmin(-18.0),
     gridYmax(2.0),
     gridYmajorstep(0.5),
     gridYminorstep(0.1),
-    gridYpixelsperunit(1000.0)
+    gridYpixelsperunit(1000.0),
+    gridYaxisenabled(true)
 {
     ui->setupUi(this);
 
@@ -68,7 +70,8 @@ gridplot::gridplot(QWidget *parent) :
     gridminorpen = QPen(orangeBrush, 0, Qt::DotLine);
 
     p->setCanvasBackground(QColor(Qt::white));
-    p->enableAxis(QwtPlot::yLeft,false);
+    p->enableAxis(QwtPlot::yLeft,gridXaxisenabled);
+    p->enableAxis(QwtPlot::xBottom,gridYaxisenabled);
     ui->vlPlot->addWidget(p);
 }
 
@@ -203,4 +206,14 @@ void gridplot::setoffset(int milliseconds)
 {
     timeoffset = milliseconds/gridXpixelsperunit;
     plotgrid();
+}
+
+void gridplot::enableAxis(int axisId, bool tf)
+{
+    if (axisId == QwtPlot::xBottom) {
+        gridXaxisenabled = tf;
+    } else if (axisId == QwtPlot::yLeft) {
+        gridYaxisenabled = tf;
+    }
+    p->enableAxis(axisId,tf);
 }

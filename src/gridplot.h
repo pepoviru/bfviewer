@@ -47,6 +47,7 @@ public:
     bool isZoomEnabled();
     void setPanEnabled(bool v);
     bool isPanEnabled();
+    void enableAxis(int axisId, bool tf);
 
     //public properties
     QwtPlot *p;
@@ -67,6 +68,7 @@ public:
     double gridXminorstep;
     //Scale factor in pixels per unit of the horizontal axis
     double gridXpixelsperunit;
+    bool gridXaxisenabled;
 
     //Vertical axis
     QString gridYunits;
@@ -78,6 +80,7 @@ public:
     double gridYminorstep;
     //Scale factor in pixels per unit of the horizontal axis
     double gridYpixelsperunit;
+    bool gridYaxisenabled;
 
     double timeoffset;
 

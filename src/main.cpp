@@ -55,13 +55,15 @@ int main(int argc, char* argv[])
     bfviewer.add_options()
             ("page.step",po::value<int>()->default_value(200), "Scrollbar page (big) step")
             ("single.step",po::value<int>()->default_value(40), "Scrollbar single (small) step")
-            ("plot.num.samples",po::value<int>()->default_value(10000), "Number of samples of each row to display");
+            ("plot.num.samples",po::value<int>()->default_value(10000), "Number of samples of each row to display")
+            ("inter.row.offset",po::value<double>()->default_value(-1.5), "Plot offset between rows");
 
     po::options_description bfbufferedfile("Bigfoot bufferedfile options");
     bfbufferedfile.add_options()
             ("file.nrows",po::value<int>()->default_value(12), "Number of rows")
             ("file.ncols",po::value<int>()->default_value(25*3600*1000), "Number of columns")
-            ("file.num.maped.elements",po::value<int>()->default_value(12*3600*1000), "Number of samples to map in memory");
+            ("file.num.maped.elements",po::value<int>()->default_value(12*3600*1000), "Number of samples to map in memory")
+            ("file.offset",po::value<int>()->default_value(0), "offset");
 
     po::options_description gridplot("Grid properties");
     gridplot.add_options()
@@ -70,12 +72,14 @@ int main(int argc, char* argv[])
             ("pan.enabled",po::value<bool>()->default_value(true), "Enable panning capabilities")
             ("horizontal.axis.enabled",po::value<bool>()->default_value(true), "Enable horizontal axis")
             ("horizontal.maxfs",po::value<double>()->default_value(1000.0), "Horizontal maximum sampling frequecy")
+            ("horizontal.axis.units",po::value<std::string>()->default_value("seconds"), "Horizontal axis units label")
             ("Xmin",po::value<double>()->default_value(0.0), "X min")
             ("Xmax",po::value<double>()->default_value(10.0), "X max")
             ("Xstep.minor",po::value<double>()->default_value(0.04), "Horizontal grid minor step")
             ("Xstep.major",po::value<double>()->default_value(0.20), "Horizontal grid major step")
             ("vertical.axis.enabled",po::value<bool>()->default_value(true), "Enable vertical axis")
             ("vertical.maxfs",po::value<double>()->default_value(1000.0), "Vertical maximum sampling frequecy")
+            ("vertical.axis.units",po::value<std::string>()->default_value("mV"), "Vertical axis units label")
             ("Ymin",po::value<double>()->default_value(-18.0), "Y min")
             ("Ymax",po::value<double>()->default_value(2.0), "Y max")
             ("Ystep.minor",po::value<double>()->default_value(0.1), "Vertical grid minor step")
