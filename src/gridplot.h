@@ -51,22 +51,8 @@ public:
     //public properties
     QwtPlot *p;
 
-private Q_SLOTS:
-    void resizeEvent(QResizeEvent * re);
-
-private:
-    //private methods
-    void resizeContents();
-    void generateGrid();
-    void plotgrid();
-
-    //private properties
-    Ui::gridplot *ui;
-
     //grid porperties
 
-    //Top Left corner of the grid in the QwtPlot space (pixels)
-    QPointF gridlocation;
     //Pens for major and minor lines of the grid
     QPen gridmajorpen;
     QPen gridminorpen;
@@ -93,7 +79,19 @@ private:
     //Scale factor in pixels per unit of the horizontal axis
     double gridYpixelsperunit;
 
-    double _timeoffset;
+    double timeoffset;
+
+private Q_SLOTS:
+    void resizeEvent(QResizeEvent * re);
+
+private:
+    //private methods
+    void resizeContents();
+    void generateGrid();
+    void plotgrid();
+
+    //private properties
+    Ui::gridplot *ui;
 
     //Zomming tools
     QwtPlotZoomer *zoomer;

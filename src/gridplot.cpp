@@ -29,15 +29,27 @@
 
 gridplot::gridplot(QWidget *parent) :
     QFrame(parent),
-    ui(new Ui::gridplot)
+    ui(new Ui::gridplot),
+    gridXunits("second"),
+    gridXmin(0.0),
+    gridXmax(10.0),
+    gridXmajorstep(0.20),
+    gridXminorstep(0.04),
+    gridXpixelsperunit(1000.0),
+    gridYunits("mV"),
+    gridYmin(-18.0),
+    gridYmax(2.0),
+    gridYmajorstep(0.5),
+    gridYminorstep(0.1),
+    gridYpixelsperunit(1000.0)
 {
     ui->setupUi(this);
 
     p = new QwtPlot(this);
 
     //initialize grid
-    _timeoffset=0.0;
-    setoffset(_timeoffset);
+    timeoffset=0.0;
+    setoffset(timeoffset);
 
     //initialize zooming tools
 
@@ -50,6 +62,12 @@ gridplot::gridplot(QWidget *parent) :
     magnifier = new QwtPlotMagnifier( p->canvas() );
     magnifier->setMouseButton(Qt::MiddleButton,Qt::NoButton);
 
+    //Pens for major and minor lines of the grid
+    QBrush orangeBrush = QBrush(QColor::fromRgb(255,127,0));
+    gridmajorpen = QPen(orangeBrush, 0, Qt::SolidLine);
+    gridminorpen = QPen(orangeBrush, 0, Qt::DotLine);
+
+    p->setCanvasBackground(QColor(Qt::white));
     p->enableAxis(QwtPlot::yLeft,false);
     ui->vlPlot->addWidget(p);
 }
@@ -70,7 +88,7 @@ void gridplot::resizeContents()
     int margin = 50;
     int containerWidth = this->parentWidget()->width() - margin;
     int containerHeight = this->parentWidget()->height() - margin;
-    double aspectRatio = ((gridXmax - gridXmin - _timeoffset)/gridXmajorstep)/((gridYmax - gridYmin)/gridYmajorstep);//1.0;
+    double aspectRatio = ((gridXmax - gridXmin)/gridXmajorstep)/((gridYmax - gridYmin)/gridYmajorstep);//1.0;
     int contentsHeight = containerHeight ;
     int contentsWidth = containerHeight * aspectRatio;
     if (contentsWidth > containerWidth ) {
@@ -92,8 +110,8 @@ void gridplot::plotgrid()
 
     //horizontal major lines
     int numberoflines = (gridYmax - gridYmin)/gridYmajorstep;
-    xlocs[0]=gridXmin + _timeoffset;
-    xlocs[1]=gridXmax;
+    xlocs[0]=gridXmin + timeoffset;
+    xlocs[1]=gridXmax + timeoffset;
     for (int i=0;i<=numberoflines;++i)
     {
         anyline = new QwtPlotCurve();
@@ -116,13 +134,13 @@ void gridplot::plotgrid()
     }
 
     //vertical major lines
-    numberoflines = (gridXmax - gridXmin)/gridXmajorstep;
+    numberoflines = (gridXmax - gridXmin+ timeoffset)/gridXmajorstep;
     ylocs[0]=gridYmin;
     ylocs[1]=gridYmax;
     for (int i=0;i<=numberoflines;++i)
     {
         xlocs[0] = xlocs[1] = gridXmin + gridXmajorstep*(i);
-        if (xlocs[0]>=_timeoffset){
+        if (xlocs[0]>=timeoffset){
             anyline = new QwtPlotCurve();
             anyline->setSamples(&xlocs[0],&ylocs[0],xlocs.size());
             anyline->setPen(gridmajorpen);
@@ -131,11 +149,11 @@ void gridplot::plotgrid()
         }
     }
     //vertical minor lines
-    numberoflines = (gridXmax - gridXmin)/gridXminorstep;
+    numberoflines = (gridXmax - gridXmin + timeoffset)/gridXminorstep;
     for (int i=0;i<=numberoflines;++i)
     {
         xlocs[0] = xlocs[1] = gridXmin + gridXminorstep*(i);
-        if (xlocs[0]>=_timeoffset){
+        if (xlocs[0]>=timeoffset){
             anyline = new QwtPlotCurve();
             anyline->setSamples(&xlocs[0],&ylocs[0],xlocs.size());
             anyline->setPen(gridminorpen);
@@ -144,13 +162,12 @@ void gridplot::plotgrid()
         }
     }
 
-    p->setCanvasBackground(QColor(Qt::white));
 }
 
 //zoom tools methods
 void gridplot::resetzoom()
 {
-    QRectF zoombase = QRectF(gridXmin + _timeoffset,gridYmin,gridXmax - gridXmin - _timeoffset,gridYmax-gridYmin);
+    QRectF zoombase = QRectF(gridXmin + timeoffset,gridYmin,gridXmax - gridXmin,gridYmax-gridYmin);
     bool ze = zoomer->isEnabled();
     bool pe = panner->isEnabled();
     zoomer->setEnabled(true);
@@ -184,37 +201,6 @@ bool gridplot::isPanEnabled()
 
 void gridplot::setoffset(int milliseconds)
 {
-    _timeoffset = milliseconds/1000.0;
-    //Top Left corner of the grid in the QwtPlot space (pixels)
-    gridlocation.setX(0);
-    gridlocation.setY(0);
-    //Pens for major and minor lines of the grid
-    QBrush orangeBrush = QBrush(QColor::fromRgb(255,127,0));
-    gridmajorpen = QPen(orangeBrush, 0, Qt::SolidLine);
-    gridminorpen = QPen(orangeBrush, 0, Qt::DotLine);
-
-    //Horizontal axis
-    gridXunits = QString("seconds");
-    //Limits (in real units) of the horizontal axis of the grid
-    gridXmin = 0.0; // t0 = 0.0
-//    gridXmax = 2.0 + _timeoffset; // tend = 2.0 seconds
-    gridXmax = 10.0 + _timeoffset; // tend = 10.0 seconds
-    //Major and minor steps (in real units) of the horizontal axis of the grid
-    gridXmajorstep = 0.20; // 200 ms;
-    gridXminorstep = 0.04; // 40 ms;
-    //Scale factor in pixels per unit of the horizontal axis
-    gridXpixelsperunit = 1000.0; // 1 pixel = 1ms
-
-    //Vertical axis
-    gridYunits = QString("mV");
-    //Limits (in real units) of the horizontal axis of the grid
-//    gridYmin = -1.0; //-1.0 mV
-    gridYmin = -1.5*12; //-1.0 mV
-    gridYmax = 2.0; //1.5 mV
-    //Major and minor steps (in real units) of the horizontal axis of the grid
-    gridYmajorstep = 0.5; // 0.5 mV
-    gridYminorstep = 0.1; // 0.1 mV
-    //Scale factor in pixels per unit of the horizontal axis
-    gridYpixelsperunit = 1000.0; // 1 pixel = 1uV
+    timeoffset = milliseconds/gridXpixelsperunit;
     plotgrid();
 }
