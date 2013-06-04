@@ -111,8 +111,12 @@ void MainWindow::setInitialTimeDisplay(int start)
         for (std::size_t x = 0; x < numofplottedsamples; ++x)
         {
             if (x+start<ncols){
-                xs[x] = (x+start)/_gridPlot->gridXpixelsperunit; //position in seconds
-                ys[x] = row*interrowoffset + (*_bf)(row,x+start); //y value of that sample
+		    xs[x] = (x+start)/_gridPlot->gridXpixelsperunit; //position in seconds
+		    if (_bf!=NULL) {
+			    ys[x] = row*interrowoffset + (*_bf)(row,x+start)/_gridPlot->gridYpixelsperunit; //y value of that sample
+		    } else if (_bfsi!=NULL) {
+			    ys[x] = row*interrowoffset + (*_bfsi)(row,x+start)/_gridPlot->gridYpixelsperunit; //y value of that sample
+		    }
             }
         }
 
@@ -138,7 +142,12 @@ void MainWindow::loadFile(const std::string filename)
     std::size_t nummappedels = _vm["file.num.maped.elements"].as<int>();
     std::size_t offset = _vm["file.offset"].as<int>();
     _bf = NULL;
+    _bfsi=NULL;
+    if(ext.string()==".bin") {
     _bf = new bigfoot::bufferedfile<double>(filename.c_str(), nrows, ncols, nummappedels, offset);
+    } else {
+    _bfsi = new bigfoot::bufferedfile<int16_t>(filename.c_str(), nrows, ncols, nummappedels, offset);
+    }
 
     //TODO: move scrollbar reset to appropiate method
     _sbTime->setRange(0, ncols);
@@ -220,6 +229,7 @@ void MainWindow::closeEvent ( QCloseEvent * event )
         if ((QPushButton*)msgBox->clickedButton() == yesButton)
         {
 		_bf = NULL;
+		_bfsi=NULL;
 		event->accept();
 	}
     }
