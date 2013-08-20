@@ -104,7 +104,8 @@ class MainWindow : public QMainWindow
         QString _lastDirectory;
         QString appname;
 
-        bigfoot::bufferedfile *_bf;
+        bigfoot::bufferedfile<double> *_bf;
+        bigfoot::bufferedfile<int16_t> *_bfsi;
 
         QScrollBar *_sbTime;
         //Private methods
