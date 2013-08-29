@@ -41,7 +41,7 @@
 //#include <QAbstractItemModel>
 //#include <QModelIndex>
 #include <QSvgGenerator>
-#include <qwt/qwt_plot_renderer.h>
+#include <qwt_plot_renderer.h>
 #include "ui_main_window.h"
 
 #include <bigfoot/bigfoot.hpp>

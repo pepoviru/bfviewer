@@ -18,14 +18,14 @@
 #include "gridplot.h"
 #include "ui_gridplot.h"
 
-#include <qwt/qwt_plot.h>
+#include <qwt_plot.h>
 
 #include <qlayout.h>
 #include <qpen.h>
 
-#include <qwt/qwt_plot_zoomer.h>
-#include <qwt/qwt_plot_magnifier.h>
-#include <qwt/qwt_plot_panner.h>
+#include <qwt_plot_zoomer.h>
+#include <qwt_plot_magnifier.h>
+#include <qwt_plot_panner.h>
 
 gridplot::gridplot(QWidget *parent) :
     QFrame(parent),
@@ -59,10 +59,10 @@ gridplot::gridplot(QWidget *parent) :
     zoomer->setZoomBase(true);
     setZoomEnabled(true);
     panner = new QwtPlotPanner( p->canvas() );
-    panner->setMouseButton(Qt::RightButton,Qt::NoButton);
+    panner->setMouseButton(Qt::RightButton);
     setPanEnabled(true);
     magnifier = new QwtPlotMagnifier( p->canvas() );
-    magnifier->setMouseButton(Qt::MiddleButton,Qt::NoButton);
+    magnifier->setMouseButton(Qt::MiddleButton);
 
     //Pens for major and minor lines of the grid
     QBrush orangeBrush = QBrush(QColor::fromRgb(255,127,0));

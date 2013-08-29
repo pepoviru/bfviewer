@@ -35,7 +35,7 @@
 #include "main_window.h"
 #include "moc_main_window.cpp"
 
-#include <qwt/qwt_plot_marker.h>
+#include <qwt_plot_marker.h>
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
