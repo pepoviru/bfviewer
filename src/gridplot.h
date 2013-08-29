@@ -19,12 +19,12 @@
 #define GRIDPLOT_H
 
 #include <QFrame>
-#include <qwt/qwt_plot.h>
+#include <qwt_plot.h>
 #include <qpen.h>
-#include <qwt/qwt_plot_curve.h>
-#include <qwt/qwt_plot_zoomer.h>
-#include <qwt/qwt_plot_panner.h>
-#include <qwt/qwt_plot_magnifier.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_zoomer.h>
+#include <qwt_plot_panner.h>
+#include <qwt_plot_magnifier.h>
 
 namespace Ui {
 class gridplot;
