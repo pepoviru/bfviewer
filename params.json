@@ -1,0 +1,1 @@
+{"name":"Bfviewer","tagline":"","body":"# bfviewer\r\nbfviewer is a program to view big binary files using bigfoot library\r\n\r\n## Prerequisites\r\nbfviewer has only been tested with Linux 64bit. It has the same requirements as bigfoot library.\r\n\r\n","google":"","note":"Don't delete this file! It's used internally to help with page regeneration."}
